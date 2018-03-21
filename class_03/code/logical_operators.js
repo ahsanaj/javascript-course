@@ -20,3 +20,16 @@ if (userNameExists === true && appropriatePassword === true) {
 } else {
     console.log("The username or password is incorrect.");
 }
+
+// Store hasUserAccount
+// If the user doesn't have a user account
+//You can create an account
+// Otherwise
+//You already have an account
+
+var hasUserAccount = false;
+if (!hasUserAccount) {
+    console.log("You can create an account");
+} else {
+    console.log("You already have an account");
+}
