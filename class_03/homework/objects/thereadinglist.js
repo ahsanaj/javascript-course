@@ -30,9 +30,10 @@ var readingList = [{
 var readingListLength = readingList.length;
 
 for (var index = 0; index < readingListLength; index += 1) {
-    var title = readingList[index].title;
-    var author = readingList[index].author;
-    var isRead = readingList[index].alreadyRead;
+    var book = readingList[index];
+    var title = book.title;
+    var author = book.author;
+    var isRead = book.alreadyRead;
 
     if (isRead) {
         console.log("You alread read \"" + title + "\" by " + author);

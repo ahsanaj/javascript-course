@@ -24,17 +24,14 @@ for (var index = 0; index < topChoices.length; index += 1) {
 
     var choice = topChoices[index];
 
-    if (humanIndex === 1) {
+    if (humanIndex % 10 === 1) {
         suffix = "st";
-    } else if (humanIndex === 2) {
+    } else if (humanIndex % 20 === 2) {
         suffix = "nd";
-    } else if (humanIndex === 3) {
+    } else if (humanIndex % 30 === 3) {
         suffix = "rd";
-    } else if (humanIndex >= 4 && humanIndex <= 20) {
+    } else
         suffix = "th";
-    } else {
-        suffix = "";
-    }
 
     console.log("My " + humanIndex + suffix + " choice is " + choice);
 }

@@ -33,6 +33,8 @@ console.log(rainbowColors.indexOf("blue"));
 
 // Bonus: Find out the difference between .slice and .splice
 
+// The key difference between slice and splice is that one is *destructive* and one is *non-destructive*. *Destructive* methods change the data permanently, whereas *non-destructive* don't
+
 // .slice needs to accept two arguments, start and end. It will return a new array containing the elements from the given start index up the one right before the specified end index. It DOES NOT change the original array but rather creates a copy of it.
 // Example: var colors = ["red","blue","orange","green","white"];
 // var newColor = colors.slice(0,3) =>  The result will be ["red","blue","orange"];

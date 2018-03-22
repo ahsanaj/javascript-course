@@ -21,11 +21,11 @@
 for (var i = 60; i <= 100; i += 1) {
     if (i >= 90) {
         console.log("For " + i + " ,you got an A.");
-    } else if (i >= 80 && i <= 89) {
+    } else if (i >= 80) {
         console.log("For " + i + " ,you got a B.");
-    } else if (i >= 70 && i <= 79) {
+    } else if (i >= 70) {
         console.log("For " + i + " ,you got a C.");
-    } else if (i >= 60 && i <= 69) {
+    } else if (i >= 60) {
         console.log("For " + i + " ,you got a D.");
     } else {
         console.log("For " + i + " ,you got a F.");

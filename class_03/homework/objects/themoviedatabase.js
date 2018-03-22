@@ -11,4 +11,10 @@ var favoriteMovie = {
     stars: ["Aamir Khan", "Madhavan", "Mona Singh", "Sharman Joshi"]
 }
 
-console.log(favoriteMovie.title + " lasts for " + favoriteMovie.duration + " mins. Stars: " + favoriteMovie.stars.join(', '));
+var strStars = favoriteMovie.stars;
+
+var strStarsLength = strStars.length;
+
+var printStars = strStars.slice(0, strStarsLength - 1).join(', ') + " and " + strStars.slice(-1);
+
+console.log(favoriteMovie.title + " lasts for " + favoriteMovie.duration + " mins. Stars: " + printStars);
