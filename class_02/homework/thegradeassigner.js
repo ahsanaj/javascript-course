@@ -4,13 +4,13 @@
 var testResult = "D";
 
 if (testResult === "A") {
-    console.log("Your score is 80% or higher");
+    console.log("Your score is 90% or higher");
 } else if (testResult === "B") {
-    console.log("Your score is between 70% and 80%");
+    console.log("Your score is between 80% and 89%");
 } else if (testResult === "C") {
-    console.log("Your score is between 60% and 70%");
+    console.log("Your score is between 70% and 79%");
 } else if (testResult === "D") {
-    console.log("Your score is between 50% and 60%");
+    console.log("Your score is between 60% and 69%");
 } else if (testResult === "F") {
-    console.log("Your score is 50% or below");
+    console.log("Your score is 60% or below");
 }
