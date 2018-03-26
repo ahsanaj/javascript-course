@@ -78,68 +78,74 @@ var player1WinCount = 0,
 // Declaring the variable to store the Round Count    
 var roundCount = 0;
 
+var intervalVariable;
+
 // Declaring the variable to store the total number of rounds to Win the series. Example to win the best of three, the player who wins 2 games will win the series.
 var totalRoundsToWinSeries = 2;
 
 // Declaring the function to generate random hand signs. Since the game requires to keep changing the sign three times before the outcome, a for loop is used which will loop three times; and on each loop random Player 1 and Player 2 hand signs are selected from the array
 
+var player1Img = document.getElementById("player1Image");
+var player2Img = document.getElementById("player2Image");
 
+var turnCount = 0;
 
 function randomHandSignGenerator() {
+    console.log("clicked");
+    turnCount += 1;
+    // Storing a random player 1 hand sign from an array by using the Math.Random function
+    player1RandomHandSign = handSigns[Math.floor(Math.random() * 3)];
 
-    for (var handCount = 0; handCount < 3; handCount += 1) {
+    // Storing a random player 2 hand sign from an array by using the Math.Random function
+    player2RandomHandSign = handSigns[Math.floor(Math.random() * 3)];
 
-        // Storing a random player 1 hand sign from an array by using the Math.Random function
-        player1RandomHandSign = handSigns[Math.floor(Math.random() * 3)];
-
-        // Storing a random player 2 hand sign from an array by using the Math.Random function
-        player2RandomHandSign = handSigns[Math.floor(Math.random() * 3)];
-
+    //player1Img.src = "images/" + player1RandomHandSign + ".jpg";
+    //player2Img.src = "images/" + player2RandomHandSign + ".jpg";
+    console.log("hey");
+    console.log(turnCount);
+    player1Img.classList.add('fadeIn');
+    player2Img.classList.add('fadeIn');
+    if (turnCount === 3) {
+        player1Img.src = "images/" + player1RandomHandSign + ".jpg";
+        player2Img.src = "images/" + player2RandomHandSign + ".jpg";
+        clearInterval(intervalVariable);
+        pickTheRoundWinner(player1RandomHandSign, player2RandomHandSign);
+    } else {
+        setTimeout(function() {
+            player1Img.classList.remove('fadeIn');
+            player2Img.classList.remove('fadeIn');
+        }, 800);
     }
-
 }
 
+function printResultMessage(result) {
+    document.getElementsByClassName('resultMessage')[0].classList.add('showResultMessage');
+    document.getElementsByClassName('resultMessage')[0].innerHTML = "<strong>* Round</strong> " + (roundCount) + " result<br>Player 1 played = " + player1RandomHandSign + "<br>Player 2 played = " + player2RandomHandSign + "<br>" + result;
+}
 // Declaring the fucntion to check the hand signs, decide who has won the round and then print the outcome of that round. After completing of the round, player who has won the game will get its win count incremented by 1. It the game ended in a draw, the round will be re-played.
 
 function pickTheRoundWinner(player1Go, player2Go) {
     var result;
-    if (player1Go === "rock" && player2Go === "scissors") {
-        result = "Player 1 has won the game";
-        player1WinCount += 1;
-
-    } else if (player1Go === "scissors" && player2Go === "rock") {
-        result = "Player 2 has won the game";
-        player2WinCount += 1;
-
-    } else if (player1Go === "rock" && player2Go === "paper") {
-        result = "Player 2 has won the game";
-        player2WinCount += 1;
-
-    } else if (player1Go === "paper" && player2Go === "rock") {
-        result = "Player 1 has won the game";
-        player1WinCount += 1;
-
-    } else if (player1Go === "paper" && player2Go === "scissors") {
-        result = "Player 2 has won the game";
-        player2WinCount += 1;
-
-    } else if (player1Go === "scissors" && player2Go === "paper") {
-        result = "Player 1 has won the game";
-        player1WinCount += 1;
-
-    } else if (player1Go === player2Go) {
+    if (player1Go === player2Go) {
         result = "The game has ended in a draw, this round will be re-played";
+    } else if (player1Go === "rock" && player2Go === "scissors" ||
+        player1Go === "paper" && player2Go === "rock" ||
+        player1Go === "scissors" && player2Go === "paper") {
+        result = "Player 1 has won the game";
+        player1WinCount += 1;
 
     } else {
-        result = "Something went wrong! This round will be re-played";
+        result = "Player 2 has won the game";
+        player2WinCount += 1;
     }
+
     // The round is finished here
     roundCount += 1;
     console.log("/*******************Round " + (roundCount) + "********************/");
     console.log("Player 1 hand sign = " + player1RandomHandSign);
     console.log("Player 2 hand sign = " + player2RandomHandSign);
     console.log(result);
-
+    printResultMessage(result);
 }
 // Declaring the function to print out the results to the screen by checking the Player1 and Player2 Win Count.
 function printOutTheResults() {
@@ -170,7 +176,7 @@ function printOutTheResults() {
 }
 
 // While loop will run until (player1WinCount or player2WinCount) === totalRoundsToWinSeries 
-while (player1WinCount < totalRoundsToWinSeries && player2WinCount < totalRoundsToWinSeries) {
+/*while (player1WinCount < totalRoundsToWinSeries && player2WinCount < totalRoundsToWinSeries) {
 
     // Calling the function to generate player hand signs
     randomHandSignGenerator();
@@ -178,7 +184,13 @@ while (player1WinCount < totalRoundsToWinSeries && player2WinCount < totalRounds
     // Calling the function to get the round winner
     pickTheRoundWinner(player1RandomHandSign, player2RandomHandSign);
 
-}
+}*/
 
 // Calling the function to print out the results to the screen
-printOutTheResults();
+//printOutTheResults();
+
+document.getElementById("Start").onclick = function() {
+    randomHandSignGenerator();
+    intervalVariable = setInterval(function() { randomHandSignGenerator() }, 2000);
+
+};
