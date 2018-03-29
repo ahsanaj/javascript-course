@@ -102,10 +102,18 @@ function loginAccount(index, email, password) {
 
 function createAccount(email, password, isAdmin) {
     if (checkLoginExists(email) === -1) {
-        var newUser = {};
-        newUser.email = email;
-        newUser.password = password;
-        newUser.isAdmin = isAdmin;
+
+        // This is slightly slower than the bottom
+        //var newUser = {};
+        //newUser.email = email;
+        //newUser.password = password;
+        //newUser.isAdmin = isAdmin;
+
+        var newUser = {
+            email: email,
+            password: password,
+            isAdmin: isAdmin
+        }
 
         users.push(newUser);
         console.log("The account " + email + " has successfully been added into the system");
