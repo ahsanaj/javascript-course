@@ -106,7 +106,11 @@ var trainLines = [{
 // declaring the function checkPluralize to check for plurals. It takes in word and count as its parameters. For eg. checkPluralize("station","2") will return the string "stations" whereas checkPluralize("station","1") will return the string "station"
 function checkPluralize(word, count) {
     var result = "";
-    count > 1 ? result = word + "s" : result = word;
+    if (count > 1) {
+        result = word + "s";
+    } else {
+        result = word;
+    }
     return result;
 }
 
@@ -115,9 +119,11 @@ function checkGrammer(names, splitBy) {
     var result = "";
     var namesArray = names.split(splitBy);
 
-    namesArray.length > 2 ?
-        result = namesArray.slice(1, namesArray.length - 1).join(", ") + " and " + namesArray.slice(-1) :
+    if (namesArray.length > 2) {
+        result = namesArray.slice(1, namesArray.length - 1).join(", ") + " and " + namesArray.slice(-1);
+    } else {
         result = namesArray.slice(1).join();
+    }
 
     return result;
 }
@@ -414,7 +420,7 @@ function travelFrom(startLineName, startStation, endLineName, endStation) {
     // saving station name Index from trainlines array of objects into stationIndexObj by passing the lineIndexObj into the function - for e.g Carlton index will be 2 in line T4.
     var stationIndexObj = getStationIndex(startStationObj, endStationObj);
 
-    // after saving line and station index data, the app will check for if the stations provided exists in the system. The object stationIndexObj has the start and end station index values, if one of the index is equal to -1 that means that station hasn't been found
+    // after saving line and station index data, the app will check if the stations provided exist in the system. The object stationIndexObj has the start and end station index values, if one of the index is equal to -1 that means that station hasn't been found
     if (stationIndexObj.startStationIndex !== -1 && stationIndexObj.endStationIndex !== -1) {
 
         // checking if the start and end stations are not the same, if they are the same it will log out "You are already on that station, please change the destination"
