@@ -160,22 +160,21 @@
             divRouteInfo.innerHTML = "";
 
             if (Object.keys(routeObj).length !== 0) {
-                if (!checkSameStation(startSelectStation.value, endSelectStation.value)) {
-                    var newHeading = document.createElement("h3");
-                    newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
-                    divRouteInfo.appendChild(newHeading);
+                var newHeading = document.createElement("h3");
+                newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
+                divRouteInfo.appendChild(newHeading);
 
-                    var ul = document.createElement("ul");
-                    ul.classList.add("list-group");
-                    divRouteInfo.appendChild(ul);
+                var ul = document.createElement("ul");
+                ul.classList.add("list-group");
+                divRouteInfo.appendChild(ul);
 
-                    for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
-                        var li = document.createElement("li");
-                        li.innerText = routeObj.startStationNames[i];
-                        li.classList.add("list-group-item");
-                        ul.appendChild(li);
-                    }
-
+                for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
+                    var li = document.createElement("li");
+                    li.innerText = routeObj.startStationNames[i];
+                    li.classList.add("list-group-item");
+                    ul.appendChild(li);
+                }
+                if (routeObj.endStationNames.length > 1) {
                     var newHeading = document.createElement("p");
                     newHeading.innerText = "Change at " + routeObj.commonStationName + " station.";
                     newHeading.classList.add("alertHeading");
@@ -196,12 +195,8 @@
                         li.classList.add("list-group-item");
                         ul.appendChild(li);
                     }
-                } else {
-                    var newHeading = document.createElement("h2");
-                    newHeading.innerText = "You are already on " + startSelectStation.value + " station";
-                    newHeading.classList.add("alertHeading");
-                    divRouteInfo.appendChild(newHeading);
                 }
+
             } else {
                 var newHeading = document.createElement("h2");
                 newHeading.innerText = "No common station found, please try alternate route";
@@ -216,27 +211,22 @@
             var divRouteInfo = document.getElementById("divRouteInfo");
             divRouteInfo.innerHTML = "";
 
-            if (!checkSameStation(startSelectStation.value, endSelectStation.value)) {
-                var newHeading = document.createElement("h3");
-                newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
-                divRouteInfo.appendChild(newHeading);
 
-                var ul = document.createElement("ul");
-                ul.classList.add("list-group");
-                divRouteInfo.appendChild(ul);
+            var newHeading = document.createElement("h3");
+            newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
+            divRouteInfo.appendChild(newHeading);
 
-                for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
-                    var li = document.createElement("li");
-                    li.innerText = routeObj.startStationNames[i];
-                    li.classList.add("list-group-item");
-                    ul.appendChild(li);
-                }
-            } else {
-                var newHeading = document.createElement("h2");
-                newHeading.innerText = "You are already on " + startSelectStation.value + " station";
-                newHeading.classList.add("alertHeading");
-                divRouteInfo.appendChild(newHeading);
+            var ul = document.createElement("ul");
+            ul.classList.add("list-group");
+            divRouteInfo.appendChild(ul);
+
+            for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
+                var li = document.createElement("li");
+                li.innerText = routeObj.startStationNames[i];
+                li.classList.add("list-group-item");
+                ul.appendChild(li);
             }
+
 
         }
 
