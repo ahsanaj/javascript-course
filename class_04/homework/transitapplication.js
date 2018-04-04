@@ -243,6 +243,10 @@ function getStationIndex(startObj, endObj) {
 function checkOnSameLine(startLineName, endLineName) {
     return startLineName.toLowerCase() === endLineName.toLowerCase();
 }
+
+function checkSameStation(startStation, endStation) {
+    return startStation.toLowerCase() === endStation.toLowerCase();
+}
 // declaring the getCommonStation function to find the common stations between two lines provided by the users. The function takes lineIndexObj and stationIndexObj as its parameters and return the commonStationArray array with the common station details
 function getCommonStation(lineIndexObj, stationIndexObj) {
 

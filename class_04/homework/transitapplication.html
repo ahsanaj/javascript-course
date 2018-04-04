@@ -155,12 +155,68 @@
         }
 
         function printRouteInfo(routeObj) {
-            console.log(routeObj);
+            //console.log(routeObj);
             var divRouteInfo = document.getElementById("divRouteInfo");
-
             divRouteInfo.innerHTML = "";
 
             if (Object.keys(routeObj).length !== 0) {
+                if (!checkSameStation(startSelectStation.value, endSelectStation.value)) {
+                    var newHeading = document.createElement("h3");
+                    newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
+                    divRouteInfo.appendChild(newHeading);
+
+                    var ul = document.createElement("ul");
+                    ul.classList.add("list-group");
+                    divRouteInfo.appendChild(ul);
+
+                    for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
+                        var li = document.createElement("li");
+                        li.innerText = routeObj.startStationNames[i];
+                        li.classList.add("list-group-item");
+                        ul.appendChild(li);
+                    }
+
+                    var newHeading = document.createElement("p");
+                    newHeading.innerText = "Change at " + routeObj.commonStationName + " station.";
+                    newHeading.classList.add("alertHeading");
+                    //newHeading.classList.add("changeStation");
+                    divRouteInfo.appendChild(newHeading);
+
+                    var newHeading = document.createElement("h3");
+                    newHeading.innerText = routeObj.endLineName + " " + routeObj.endDirection + " Line";
+                    divRouteInfo.appendChild(newHeading);
+
+                    var ul = document.createElement("ul");
+                    ul.classList.add("list-group");
+                    divRouteInfo.appendChild(ul);
+
+                    for (var i = 0; i < routeObj.endStationNames.length; i += 1) {
+                        var li = document.createElement("li");
+                        li.innerText = routeObj.endStationNames[i];
+                        li.classList.add("list-group-item");
+                        ul.appendChild(li);
+                    }
+                } else {
+                    var newHeading = document.createElement("h2");
+                    newHeading.innerText = "You are already on " + startSelectStation.value + " station";
+                    newHeading.classList.add("alertHeading");
+                    divRouteInfo.appendChild(newHeading);
+                }
+            } else {
+                var newHeading = document.createElement("h2");
+                newHeading.innerText = "No common station found, please try alternate route";
+                newHeading.classList.add("alertHeading");
+                divRouteInfo.appendChild(newHeading);
+            }
+
+        }
+
+        function printRouteInfoSameLine(routeObj) {
+
+            var divRouteInfo = document.getElementById("divRouteInfo");
+            divRouteInfo.innerHTML = "";
+
+            if (!checkSameStation(startSelectStation.value, endSelectStation.value)) {
                 var newHeading = document.createElement("h3");
                 newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
                 divRouteInfo.appendChild(newHeading);
@@ -175,67 +231,36 @@
                     li.classList.add("list-group-item");
                     ul.appendChild(li);
                 }
-
-                var newHeading = document.createElement("p");
-                newHeading.innerText = "Change at " + routeObj.commonStationName + " station.";
-                newHeading.classList.add("alertHeading");
-                //newHeading.classList.add("changeStation");
-                divRouteInfo.appendChild(newHeading);
-
-                var newHeading = document.createElement("h3");
-                newHeading.innerText = routeObj.endLineName + " " + routeObj.endDirection + " Line";
-                divRouteInfo.appendChild(newHeading);
-
-                var ul = document.createElement("ul");
-                ul.classList.add("list-group");
-                divRouteInfo.appendChild(ul);
-
-                for (var i = 0; i < routeObj.endStationNames.length; i += 1) {
-                    var li = document.createElement("li");
-                    li.innerText = routeObj.endStationNames[i];
-                    li.classList.add("list-group-item");
-                    ul.appendChild(li);
-                }
             } else {
                 var newHeading = document.createElement("h2");
-                newHeading.innerText = "No common station found, please try alternate route";
+                newHeading.innerText = "You are already on " + startSelectStation.value + " station";
                 newHeading.classList.add("alertHeading");
                 divRouteInfo.appendChild(newHeading);
             }
 
         }
 
-        function printRouteInfoSameLine(routeObj) {
-            var divRouteInfo = document.getElementById("divRouteInfo");
+        function stopFromPickingSameStation(stationName, selectElement) {
+            var options = selectElement.options;
+            var length = options.length;
 
-            divRouteInfo.innerHTML = "";
-
-            var newHeading = document.createElement("h3");
-            newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
-            divRouteInfo.appendChild(newHeading);
-
-            var ul = document.createElement("ul");
-            ul.classList.add("list-group");
-            divRouteInfo.appendChild(ul);
-
-            for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
-                var li = document.createElement("li");
-                li.innerText = routeObj.startStationNames[i];
-                li.classList.add("list-group-item");
-                ul.appendChild(li);
+            for (var i = 0; i < length; i += 1) {
+                if (options[i].text === stationName) {
+                    options[i].setAttribute("disabled", true);
+                }
             }
-
         }
-
         startSelect.addEventListener("change", function(event) {
             var startLine = event.target.value;
             var stations = getStation(startLine, startSelectStation);
             fillSelect(stations, startSelectStation);
+            stopFromPickingSameStation(endSelectStation.value, startSelectStation);
         });
         endSelect.addEventListener("change", function(event) {
             var endLine = event.target.value;
             var stations = getStation(endLine, endSelectStation);
             fillSelect(stations, endSelectStation);
+            stopFromPickingSameStation(startSelectStation.value, endSelectStation);
         });
 
         startSelectStation.addEventListener("change", function(event) {
@@ -243,12 +268,14 @@
             if (startStation !== -1) {
                 checkForStationInput();
             }
+            stopFromPickingSameStation(startStation, endSelectStation);
         });
         endSelectStation.addEventListener("change", function(event) {
             var endStation = event.target.value;
             if (endStation !== -1) {
                 checkForStationInput();
             }
+            stopFromPickingSameStation(endStation, startSelectStation);
         });
 
         btnSearch.addEventListener("click", function() {
