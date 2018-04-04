@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Book Lisy</title>
+    <link rel="stylesheet" href="mybooklist.css">
+</head>
+
+<body>
+    <h1>My Book List</h1>
+
+    <script>
+        var books = [{
+            title: 'The Design of EveryDay Things',
+            author: 'Don Norman',
+            alreadyRead: false,
+        }, {
+            title: 'The most human human',
+            author: 'Brian Christian',
+            alreadyRead: true
+        }];
+
+        var body = document.body;
+
+        var newUl = document.createElement("ul");
+
+        body.appendChild(newUl);
+
+        var ul = document.querySelector("ul");
+
+        for (var i = 0; i < books.length; i += 1) {
+            var currentBook = books[i];
+            var newLi = document.createElement("li");
+            newLi.innerHTML = "<strong> Title:</strong> " + currentBook.title + " <strong>Author:</strong> " + currentBook.author + " <strong>Already read:</strong> " + currentBook.alreadyRead;
+
+            if (currentBook.alreadyRead) {
+                newLi.classList.add("alreadyRead");
+            } else {
+                newLi.classList.add("notRead");
+            }
+
+            var newImg = document.createElement("img");
+
+            newImg.src = "images/profile.jpg";
+
+            newImg.width = "100";
+
+            newLi.prepend(newImg);
+
+            ul.appendChild(newLi);
+        }
+    </script>
+</body>
+
+</html>

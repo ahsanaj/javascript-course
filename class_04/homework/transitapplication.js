@@ -130,6 +130,16 @@ function checkGrammer(names, splitBy) {
 
 /*********** Main Functions *************/
 
+function lineLookUp(lineName) {
+    var index = -1;
+    for (var i = 0; i < trainLines.length; i += 1) {
+        var currentLine = trainLines[i];
+        if (currentLine.lineName.toLowerCase() === lineName.toLowerCase()) {
+            index = i;
+        }
+    }
+    return index;
+}
 // declaring the getLineIndex function to get line name Index from trainlines array of objects. The function takes startObj and endObj as its parameters and return the lineIndexObj object with start and end line index numbers
 function getLineIndex(startObj, endObj) {
 
@@ -138,15 +148,10 @@ function getLineIndex(startObj, endObj) {
         endLineIndex = -1;
 
     // looping through the trainLines array to find the line indexes. The search is not case-sensitive as it is comparing lowerCase values. If the start station is found, save it's index into the startLineIndex variable, similarly if the end station is found, save it's index into the endLineIndex
-    for (var i = 0; i < trainLines.length; i += 1) {
-        var currentLine = trainLines[i];
-        if (currentLine.lineName.toLowerCase() === startObj.lineName.toLowerCase()) {
-            startLineIndex = i;
-        }
-        if (currentLine.lineName.toLowerCase() === endObj.lineName.toLowerCase()) {
-            endLineIndex = i;
-        }
-    }
+
+    //  Try to use filter instead - MDN Array
+    startLineIndex = lineLookUp(startObj.lineName);
+    endLineIndex = lineLookUp(endObj.lineName);
 
     // save startLineIndex and endLineIndex variables into the lineIndexObj object
     var lineIndexObj = {
@@ -199,6 +204,9 @@ function getStationIndex(startObj, endObj) {
     return stationIndexObj;
 }
 
+function checkOnSameLine(startLineName, endLineName) {
+    return startLineName.toLowerCase() === endLineName.toLowerCase();
+}
 // declaring the getCommonStation function to find the common stations between two lines provided by the users. The function takes lineIndexObj and stationIndexObj as its parameters and return the commonStationArray array with the common station details
 function getCommonStation(lineIndexObj, stationIndexObj) {
 
@@ -258,8 +266,21 @@ function getClosestCommonStation(commonStationArray) {
 // declaring the getStationNamesOnDifferentLines function to log out the route details between two lines and where to change the train from. The function takes lineIndexObj, stationIndexObj and commonStationObj as its parameters.
 function getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonStationObj) {
 
+    var startLineName = trainLines[lineIndexObj.startLineIndex].lineName;
+
+    var startDirection = trainLines[lineIndexObj.startLineIndex].direction;
+
+    var startStationNames = [];
+
+    var commonStationName = commonStationObj.commonStationName;
+
+    var endLineName = trainLines[lineIndexObj.endLineIndex].lineName;
+
+    var endDirection = trainLines[lineIndexObj.endLineIndex].direction;
+
+    var endStationNames = [];
     // log out the line name and its direction, for.eg (T1 Western Line)
-    console.log(trainLines[lineIndexObj.startLineIndex].lineName + " " + trainLines[lineIndexObj.startLineIndex].direction + " Line");
+    // console.log(trainLines[lineIndexObj.startLineIndex].lineName + " " + trainLines[lineIndexObj.startLineIndex].direction + " Line");
 
     // check if the start station index is less than the common station index on the same line, if not the loop has to be reversed as seen later
     if (stationIndexObj.startStationIndex < commonStationObj.commonStationStartIndex) {
@@ -269,6 +290,7 @@ function getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonSt
         for (var i = stationIndexObj.startStationIndex; i <= commonStationObj.commonStationStartIndex; i += 1) {
             // saving the stationNames into the stationNames variable
             stationNames += "-" + trainLines[lineIndexObj.startLineIndex].stations[i];
+            startStationNames.push(trainLines[lineIndexObj.startLineIndex].stations[i]);
         }
 
         // passing the stationNames into the checkGrammer function to log out the "and" word before the last station name
@@ -284,7 +306,7 @@ function getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonSt
         console.log("/************** Change of Trains *************/");
 
         // logging out the where to change the line from and take a different train
-        console.log("Change at " + commonStationObj.commonStationName + " and take " + trainLines[indexObj.endLineIndex].lineName + " " +
+        console.log("Change at " + commonStationObj.commonStationName + " and take " + trainLines[lineIndexObj.endLineIndex].lineName + " " +
             trainLines[lineIndexObj.endLineIndex].direction + " Line");
     } else {
 
@@ -294,6 +316,7 @@ function getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonSt
         for (var i = stationIndexObj.startStationIndex; i >= commonStationObj.commonStationStartIndex; i -= 1) {
             // saving the stationNames into the stationNames variable
             stationNames += "-" + trainLines[lineIndexObj.startLineIndex].stations[i];
+            startStationNames.push(trainLines[lineIndexObj.startLineIndex].stations[i]);
         }
 
         // passing the stationNames into the checkGrammer function to log out the "and" word before the last station name
@@ -320,6 +343,7 @@ function getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonSt
         for (var i = commonStationObj.commonStationEndIndex; i <= stationIndexObj.endStationIndex; i += 1) {
             // saving the stationNames into the stationNames variable
             stationNames += "-" + trainLines[lineIndexObj.endLineIndex].stations[i];
+            endStationNames.push(trainLines[lineIndexObj.endLineIndex].stations[i]);
         }
 
         // passing the stationNames into the checkGrammer function to log out the "and" word before the last station name
@@ -336,6 +360,7 @@ function getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonSt
         for (var i = commonStationObj.commonStationEndIndex; i >= stationIndexObj.endStationIndex; i -= 1) {
             // saving the stationNames into the stationNames variable
             stationNames += "-" + trainLines[lineIndexObj.endLineIndex].stations[i];
+            endStationNames.push(trainLines[lineIndexObj.endLineIndex].stations[i]);
         }
 
         // passing the stationNames into the checkGrammer function to log out the "and" word before the last station name
@@ -347,10 +372,32 @@ function getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonSt
         // logging out the station names of the first line
         console.log(stationNames);
     }
+    var routeObj = {
+        startLineName: startLineName,
+
+        startDirection: startDirection,
+
+        startStationNames: startStationNames,
+
+        commonStationName: commonStationName,
+
+        endLineName: endLineName,
+
+        endDirection: endDirection,
+
+        endStationNames: endStationNames
+    };
+    return routeObj;
 }
 
 // declaring the getStationNamesOnSameLine function to log out the route details on the same line. The function takes lineIndexObj and stationIndexObj as its parameters.
 function getStationNamesOnSameLine(lineIndexObj, stationIndexObj) {
+
+    var startLineName = trainLines[lineIndexObj.startLineIndex].lineName;
+
+    var startDirection = trainLines[lineIndexObj.startLineIndex].direction;
+
+    var startStationNames = [];
 
     // log out the line name and its direction, for.eg (T1 Western Line)
     console.log(trainLines[lineIndexObj.startLineIndex].lineName + " " + trainLines[lineIndexObj.startLineIndex].direction + " Line");
@@ -363,13 +410,14 @@ function getStationNamesOnSameLine(lineIndexObj, stationIndexObj) {
         for (var i = stationIndexObj.startStationIndex; i <= stationIndexObj.endStationIndex; i += 1) {
             // saving the stationNames into the stationNames variable
             stationNames += "-" + trainLines[lineIndexObj.startLineIndex].stations[i];
+            startStationNames.push(trainLines[lineIndexObj.startLineIndex].stations[i]);
         }
 
         // logging out info text
         console.log("/************** Route Details *************/");
 
         // passing the stationNames into the checkGrammer function to log out the "and" word before the last station name
-        stationNames = checkGrammer(stationNames, "-");
+        //stationNames = checkGrammer(stationNames, "-");
 
         // logging out the station names of the first line
         console.log(stationNames);
@@ -383,23 +431,24 @@ function getStationNamesOnSameLine(lineIndexObj, stationIndexObj) {
         for (var i = stationIndexObj.startStationIndex; i >= stationIndexObj.endStationIndex; i -= 1) {
             // saving the stationNames into the stationNames variable
             stationNames += "-" + trainLines[lineIndexObj.startLineIndex].stations[i];
+            startStationNames.push(trainLines[lineIndexObj.startLineIndex].stations[i]);
         }
-
-        // logging out info text
-        console.log("/************** Route Details *************/");
-
-        // passing the stationNames into the checkGrammer function to log out the "and" word before the last station name
-        stationNames = checkGrammer(stationNames, "-");
-
-        // logging out the station names of the first line
-        console.log(stationNames);
-
     }
+    var routeObj = {
+        startLineName: startLineName,
+
+        startDirection: startDirection,
+
+        startStationNames: startStationNames,
+    };
+    return routeObj;
 }
 
 function travelFrom(startLineName, startStation, endLineName, endStation) {
 
+    // Advice for phuong - only use comments when the function name is vague
     // logging out info text
+    var routeObj = {};
     console.log("/*********  Journey from " + startStation + " to " + endStation + " ***********/");
 
     // saving start line name and start station name in the startStationObj object
@@ -427,7 +476,7 @@ function travelFrom(startLineName, startStation, endLineName, endStation) {
         if (startStation.toLowerCase() !== endStation.toLowerCase()) {
 
             //after checking the station names, the app will check if the start and end lines are same or not, if they are the same then the journey will only be on one line otherwise the journey will be on two different lines and app needs to find out the common station in both lines to proceed further
-            if (startLineName.toLowerCase() !== endLineName.toLowerCase()) {
+            if (!checkOnSameLine(startLineName, endLineName)) {
 
                 // finding out the common station in the lines provided, common station is required to continue the journey and change over the trains. The function getCommonStation returns all the common stations in the two lines provided. There can be a case where there are more than one common station in two lines. In that case, the app will then find most closest common station to the starting point so that passenger can change over the train as quickly as possible
                 var commonStationArray = getCommonStation(lineIndexObj, stationIndexObj);
@@ -439,7 +488,7 @@ function travelFrom(startLineName, startStation, endLineName, endStation) {
                     var commonStationObj = getClosestCommonStation(commonStationArray);
 
                     // after finding the closes common station, the bottom function will be called to log out the results with all the journey details
-                    getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonStationObj);
+                    var routeObj = getStationNamesOnDifferentLines(lineIndexObj, stationIndexObj, commonStationObj);
 
                 } else {
                     // app will log out the below if there are no common stations found between two lines
@@ -447,7 +496,7 @@ function travelFrom(startLineName, startStation, endLineName, endStation) {
                 }
             } else {
                 // if lines are the same, the bottom function is called to log out the result with all the journey details on the same line
-                getStationNamesOnSameLine(lineIndexObj, stationIndexObj);
+                var routeObj = getStationNamesOnSameLine(lineIndexObj, stationIndexObj);
 
             }
         } else {
@@ -458,19 +507,19 @@ function travelFrom(startLineName, startStation, endLineName, endStation) {
         // app will log out the below if one of station provided does not exist into the system.
         console.log("One of the stations do no exist on the line you have mentioned.");
     }
-
+    return routeObj;
 }
 
-travelFrom("t6", "Milsons point", "t1", "Penrith");
+// travelFrom("t6", "Milsons point", "t1", "Penrith");
 
-travelFrom("t1", "Strathfield", "t1", "strathfield");
+// travelFrom("t1", "Strathfield", "t1", "strathfield");
 
-travelFrom("t1", "Strathfield", "t1", "Parramatta");
+// travelFrom("t1", "Strathfield", "t1", "Parramatta");
 
-travelFrom("t4", "Carlton", "t1", "Penrith");
+// travelFrom("t4", "Carlton", "t1", "Penrith");
 
-travelFrom("t6", "burWood", "t6", "Dundas");
+// travelFrom("t6", "burWood", "t6", "Dundas");
 
-travelFrom("t4", "Kings Cross", "t6", "Milsons point");
+// travelFrom("t4", "Kings Cross", "t6", "Milsons point");
 
-travelFrom("t1", "penrith", "t6", "milsons point");
+// travelFrom("t1", "penrith", "t6", "milsons point");

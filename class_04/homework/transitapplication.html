@@ -1,0 +1,263 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Train Application</title>
+    <link rel="shortcut icon" type="image/png" href="images/train.png" />
+    <link type <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #ffc65c;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+        }
+        
+        .container {
+            position: relative;
+            top: 90px;
+        }
+        
+        .alertHeading {
+            margin: 16px 0;
+            border: 1px solid pink;
+            background-color: #ffdfdf;
+            padding: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Train Application</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ddStart">Start Line</label>
+                    <select class="form-control" id="ddStart"> 
+                        <option selected value="-1" disabled="true">Please select...</option>    
+                </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ddDestination">Destination Line</label>
+                    <select class="form-control" id="ddDestination">
+                        <option selected value="-1" disabled="true">Please select...</option>
+                </select>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ddStart">Start Station</label>
+                    <select disabled="true" class="form-control" id="ddStartStation">
+                            <option selected value="-1" disabled="true">Please select...</option>      
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="ddDestination">Destination Station</label>
+                    <select disabled="true" class="form-control" id="ddDestinationStation">
+                            <option selected value="-1" disabled="true">Please select...</option> 
+                    </select>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" disabled="true" id="btnSearch" class="btn btn-success">Search</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-8" id="divRouteInfo"></div>
+        </div>
+    </div>
+    <script src="transitapplication.js">
+    </script>
+    <script>
+        var startSelect = document.getElementById("ddStart");
+        var endSelect = document.getElementById("ddDestination");
+        var startSelectStation = document.getElementById("ddStartStation");
+        var endSelectStation = document.getElementById("ddDestinationStation");
+        var btnSearch = document.getElementById("btnSearch");
+        var lines = trainLines.map(function(line) {
+            return line.lineName;
+        });
+
+        function emptySelect(selectElement) {
+            //console.log(selectElement);
+            for (i = selectElement.options.length - 1; i >= 0; i--) {
+                selectElement.remove(i);
+            }
+        }
+
+        function addFirstItemSelect(selectElement) {
+            var newOption = document.createElement("option");
+            newOption.value = "-1";
+            newOption.innerText = "Please select...";
+            newOption.setAttribute("disabled", true);
+            newOption.setAttribute("selected", true);
+            selectElement.appendChild(newOption);
+        }
+
+        function fillSelect(arrayOptions, selectElement) {
+            arrayOptions.sort();
+            emptySelect(selectElement);
+            addFirstItemSelect(selectElement);
+            for (var i = 0; i < arrayOptions.length; i += 1) {
+                var newOption = document.createElement("option");
+                newOption.value = arrayOptions[i];
+                newOption.innerText = arrayOptions[i];
+                selectElement.appendChild(newOption);
+            }
+            selectElement.removeAttribute("disabled");
+        }
+
+        fillSelect(lines, startSelect);
+        fillSelect(lines, endSelect);
+
+
+        function getStation(lineName, selectElement) {
+            var lineIndex = lineLookUp(lineName);
+            return trainLines[lineIndex].stations;
+        }
+
+        function checkForStationInput() {
+            if (startSelect.value !== "-1" && endSelect.value !== "-1" && startSelectStation.value !== "-1" && endSelectStation.value !== "-1") {
+                btnSearch.removeAttribute("disabled");
+            }
+        }
+
+        function printRouteInfo(routeObj) {
+            console.log(routeObj);
+            var divRouteInfo = document.getElementById("divRouteInfo");
+
+            divRouteInfo.innerHTML = "";
+
+            if (Object.keys(routeObj).length !== 0) {
+                var newHeading = document.createElement("h3");
+                newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
+                divRouteInfo.appendChild(newHeading);
+
+                var ul = document.createElement("ul");
+                ul.classList.add("list-group");
+                divRouteInfo.appendChild(ul);
+
+                for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
+                    var li = document.createElement("li");
+                    li.innerText = routeObj.startStationNames[i];
+                    li.classList.add("list-group-item");
+                    ul.appendChild(li);
+                }
+
+                var newHeading = document.createElement("p");
+                newHeading.innerText = "Change at " + routeObj.commonStationName + " station.";
+                newHeading.classList.add("alertHeading");
+                //newHeading.classList.add("changeStation");
+                divRouteInfo.appendChild(newHeading);
+
+                var newHeading = document.createElement("h3");
+                newHeading.innerText = routeObj.endLineName + " " + routeObj.endDirection + " Line";
+                divRouteInfo.appendChild(newHeading);
+
+                var ul = document.createElement("ul");
+                ul.classList.add("list-group");
+                divRouteInfo.appendChild(ul);
+
+                for (var i = 0; i < routeObj.endStationNames.length; i += 1) {
+                    var li = document.createElement("li");
+                    li.innerText = routeObj.endStationNames[i];
+                    li.classList.add("list-group-item");
+                    ul.appendChild(li);
+                }
+            } else {
+                var newHeading = document.createElement("h2");
+                newHeading.innerText = "No common station found, please try alternate route";
+                newHeading.classList.add("alertHeading");
+                divRouteInfo.appendChild(newHeading);
+            }
+
+        }
+
+        function printRouteInfoSameLine(routeObj) {
+            var divRouteInfo = document.getElementById("divRouteInfo");
+
+            divRouteInfo.innerHTML = "";
+
+            var newHeading = document.createElement("h3");
+            newHeading.innerText = routeObj.startLineName + " " + routeObj.startDirection + " Line";
+            divRouteInfo.appendChild(newHeading);
+
+            var ul = document.createElement("ul");
+            ul.classList.add("list-group");
+            divRouteInfo.appendChild(ul);
+
+            for (var i = 0; i < routeObj.startStationNames.length; i += 1) {
+                var li = document.createElement("li");
+                li.innerText = routeObj.startStationNames[i];
+                li.classList.add("list-group-item");
+                ul.appendChild(li);
+            }
+
+        }
+
+        startSelect.addEventListener("change", function(event) {
+            var startLine = event.target.value;
+            var stations = getStation(startLine, startSelectStation);
+            fillSelect(stations, startSelectStation);
+        });
+        endSelect.addEventListener("change", function(event) {
+            var endLine = event.target.value;
+            var stations = getStation(endLine, endSelectStation);
+            fillSelect(stations, endSelectStation);
+        });
+
+        startSelectStation.addEventListener("change", function(event) {
+            var startStation = event.target.value;
+            if (startStation !== -1) {
+                checkForStationInput();
+            }
+        });
+        endSelectStation.addEventListener("change", function(event) {
+            var endStation = event.target.value;
+            if (endStation !== -1) {
+                checkForStationInput();
+            }
+        });
+
+        btnSearch.addEventListener("click", function() {
+            var routeObj = travelFrom(startSelect.value, startSelectStation.value, endSelect.value, endSelectStation.value);
+            if (checkOnSameLine(startSelect.value, endSelect.value)) {
+                printRouteInfoSameLine(routeObj);
+            } else {
+                printRouteInfo(routeObj);
+            }
+
+        });
+
+        //endSelect.addEventListener("change", fillStartStations);
+    </script>
+</body>
+
+</html>
