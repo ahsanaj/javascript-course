@@ -1,0 +1,167 @@
+@font-face {
+    font-family: "FontAwesome";
+    font-weight: normal;
+    font-style: normal;
+    src: url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.eot?v=4.3.0");
+    src: url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.eot?#iefix&v=4.3.0") format("embedded-opentype"), url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.woff2?v=4.3.0") format("woff2"), url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.woff?v=4.3.0") format("woff"), url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.ttf?v=4.3.0") format("truetype"), url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular") format("svg");
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+}
+
+header {
+    background: linear-gradient(rgb(160, 149, 167, 0.7), rgb(160, 149, 167, 0.7)), url(images/background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+    color: #ececec;
+    padding: 60px 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3em;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h4 {
+    padding-left: 15px;
+}
+
+p {
+    margin-top: 20px;
+    font-size: 1.3em;
+}
+
+select {
+    padding: 5px 10px;
+    font-size: 1.3em;
+    width: 30%;
+    height: 48px;
+}
+
+input[type='text'] {
+    padding: 5px 10px;
+    font-size: 1.3em;
+    width: 50%;
+}
+
+input[type='checkbox'] {
+    margin-right: 3px;
+}
+
+.searchBtn {
+    position: relative;
+    background: transparent;
+    border: none;
+}
+
+.searchBtn::before {
+    content: "\f002";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    position: absolute;
+    color: white;
+    font-size: 2em;
+    top: -30px;
+    cursor: pointer;
+}
+
+.searchBtn:focus {
+    outline: none;
+}
+
+.divCheckboxes {
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 50%;
+}
+
+.divCheckboxes label {
+    position: relative;
+    top: 2px;
+    left: 0;
+    margin-right: 5px;
+}
+
+.form-check {
+    display: inline-block;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.mainContent {
+    margin-top: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+    border: 1px solid #ccbaaa;
+}
+
+.card-header {
+    background-color: #b79d85;
+    color: #ececec;
+    font-size: 1.2em;
+}
+
+.card-text {
+    margin-top: 0;
+    font-size: 1.1em;
+}
+
+.badge {
+    margin-right: 5px;
+}
+
+.highlightHeading {
+    background-color: #ffff9c;
+    color: black;
+}
+
+.highlightBody {
+    background-color: #ffff9c;
+}
+
+@media (max-width:950px) {
+    select {
+        font-size: 1em;
+        width: 30%;
+        height: 41px;
+    }
+    input[type='text'] {
+        padding: 5px 10px;
+        font-size: 1em;
+        width: 50%;
+    }
+    .searchBtn::before {
+        font-size: 1.7em;
+        top: -25px;
+    }
+}
+
+@media (max-width:470px) {
+    select {
+        font-size: 0.9em;
+        width: 35%;
+        height: 38px;
+    }
+    input[type='text'] {
+        padding: 5px 10px;
+        font-size: 0.9em;
+        width: 50%;
+    }
+    .searchBtn::before {
+        font-size: 1.5em;
+        top: -23px;
+    }
+}
