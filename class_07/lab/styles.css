@@ -14,7 +14,9 @@ body {
 }
 
 header {
+    background: -webkit-linear-gradient(rgb(160, 149, 167, 0.7), rgb(160, 149, 167, 0.7)), url(images/background.jpg);
     background: linear-gradient(rgb(160, 149, 167, 0.7), rgb(160, 149, 167, 0.7)), url(images/background.jpg);
+    background: -moz-linear-gradient(rgb(160, 149, 167, 0.7), rgb(160, 149, 167, 0.7)), url(images/background.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     text-align: center;
