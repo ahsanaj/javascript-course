@@ -50,6 +50,7 @@ input[type='text'] {
     padding: 5px 10px;
     font-size: 1.3em;
     width: 50%;
+    height: 48px;
 }
 
 input[type='checkbox'] {
@@ -144,6 +145,7 @@ input[type='checkbox'] {
         padding: 5px 10px;
         font-size: 1em;
         width: 50%;
+        height: 41px;
     }
     .searchBtn::before {
         font-size: 1.7em;
@@ -161,6 +163,7 @@ input[type='checkbox'] {
         padding: 5px 10px;
         font-size: 0.9em;
         width: 50%;
+        height: 38px;
     }
     .searchBtn::before {
         font-size: 1.5em;
