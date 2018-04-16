@@ -11,7 +11,7 @@ var getClassNames = (glossary) => {
     var classNames = [];
     glossary.forEach((item) => {
         var currentItem = parseInt(item.class) < 10 ? `0${item.class}` : item.class;
-        if (classNames.indexOf(currentItem) === -1) {
+        if (!classNames.includes(currentItem)) {
             classNames.push(currentItem);
         }
     });
@@ -23,7 +23,7 @@ var getTagNames = (glossary) => {
     glossary.forEach((item) => {
         var tags = item.tags;
         tags.forEach((tag) => {
-            if (tagNames.indexOf(tag) === -1) {
+            if (!tagNames.includes(tag)) {
                 tagNames.push(tag);
             }
         });
@@ -46,32 +46,35 @@ var isChecked = (checkboxes) => {
 };
 
 var addCheckBoxClickEventListener = (checkboxes) => {
-    checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener("click", setSearch);
+    var parentCheckboxes = document.querySelector(".divCheckboxes");
+    parentCheckboxes.addEventListener("click", function(event) {
+        if (event.target && event.target.nodeName !== "DIV") {
+            setSearch();
+        }
     });
 };
 
 var fillCheckBoxes = (arrayOptions, divElement) => {
     var text = input.value.trim();
-    var checkboxHTML = "";
     arrayOptions.forEach((item) => {
 
         var checkbox = document.createElement('input');
+        var checkboxID = `cb${item}`;
         checkbox.type = "checkbox";
         checkbox.value = item;
         checkbox.name = item
-        checkbox.id = `cb${item}`;
+        checkbox.id = checkboxID;
 
         var label = document.createElement('label')
-        label.htmlFor = `cb${item}`;
-        label.innerText = `${item}`;
+        label.htmlFor = checkboxID;
+        label.innerText = item;
 
         divElement.appendChild(checkbox);
         divElement.appendChild(label);
 
     });
     var checkboxesNodeList = document.querySelectorAll("input[type='checkbox']");
-    var checkboxes = Array.prototype.slice.call(checkboxesNodeList);
+    var checkboxes = Array.from(checkboxesNodeList);
     addCheckBoxClickEventListener(checkboxes);
 };
 
@@ -79,6 +82,7 @@ var generateHTML = (glossary) => {
         mainContent.innerHTML = "";
 
         var allHTML = glossary.reduce((html, item) => {
+                    var cardHeader = `${item.term} - Class: ${parseInt(item.class) < 10 ? `0${item.class}` : item.class}`;
                     var tags = item.tags;
                     var tagHTML = tags.reduce((html, tag) => {
                         return html + `<span class="badge badge-warning">${tag}</span>`
@@ -87,7 +91,7 @@ var generateHTML = (glossary) => {
     <div class="col-lg-12 col-md-12">
         <div class="card">
             <div class="card-header">
-                ${item.term} - Class: ${parseInt(item.class) < 10 ? `0${item.class}` : item.class}
+                ${cardHeader}
             </div>
             <div class="card-body">                
                 <p class="card-text">${item.definition}</p>
@@ -99,9 +103,8 @@ var generateHTML = (glossary) => {
     </div>
     `
     }, "");
-
-    var resultHeading = "";
-    resultHeading = glossary.length > 1 ? `${glossary.length} results found` : `${glossary.length} result found`;
+    
+    var resultHeading = glossary.length > 1 ? `${glossary.length} results found` : `${glossary.length} result found`;
 
     mainContent.innerHTML = `<h4>${resultHeading}: </h4>` + allHTML;
 };
@@ -123,24 +126,22 @@ var getSearchResults = (text,className,checkboxes) => {
             if(className !== "-1")
             {
                 console.log("hey");
-                return (term.indexOf(text) !== -1 || definition.indexOf(text) !== -1) && (checkedCheckboxes.some((tag)=> tags.indexOf(tag)!==-1)) && currentClass === parseInt(className,10);
+                return (term.includes(text) || definition.includes(text)) && (checkedCheckboxes.some((tag)=> tags.includes(tag))) && currentClass === parseInt(className,10);
             }
             else
             {
-                return (term.indexOf(text) !== -1 || definition.indexOf(text) !== -1) && (checkedCheckboxes.some((tag)=> tags.indexOf(tag)!==-1));
+                return (term.includes(text) || definition.includes(text)) && (checkedCheckboxes.some((tag)=> tags.includes(tag)));
             }
         }
         else
         {
             if(className !== "-1")
             {
-                //console.log("hey2");
-                return (term.indexOf(text) !== -1 || definition.indexOf(text) !== -1) && currentClass === parseInt(className,10);
+                return (term.includes(text) || definition.includes(text)) && currentClass === parseInt(className,10);
             }
             else
             {
-                //console.log("hey");
-                return (term.indexOf(text) !== -1 || definition.indexOf(text) !== -1);
+                return (term.includes(text) || definition.includes(text));
             }
         }
     });
@@ -151,20 +152,19 @@ var getSearchResults = (text,className,checkboxes) => {
 var setSearch = () => {
     var text = input.value.trim();
     var checkboxesNodeList = document.querySelectorAll("input[type='checkbox']");
-    var checkboxes = Array.prototype.slice.call(checkboxesNodeList);
+    var checkboxes = Array.from(checkboxesNodeList);
     var className = select.value;
 
     getSearchResults(text,className,checkboxes);
 };
 
-var setHighlightSearchResults = (item, text, className) => {
-    var html = "";
+var setHighlightSearchResults = (item, text, className) => {   
     var startIndexOfText = item.innerText.toLowerCase().indexOf(text.toLowerCase());
     var endIndexOfText = startIndexOfText+text.length;
     
     if (startIndexOfText !== -1) {
         var originalText = item.innerText.substring(startIndexOfText,endIndexOfText);
-        html = item.innerText.replace(originalText, `<span class="${className}">${originalText}</span>`);
+        var html = item.innerText.replace(originalText, `<span class="${className}">${originalText}</span>`);
         item.innerHTML = html;
         html = "";        
     } 
