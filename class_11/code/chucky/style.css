@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin: 10px;
+}
+
+p {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: beige;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+}
