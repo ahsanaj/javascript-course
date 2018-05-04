@@ -1,8 +1,9 @@
-var API_KEY = "trnsl.1.1.20180423T104000Z.92de8d60387621be.caaca061cc50ab7a5e1ed325c018e437dc26eef6";
+var API_KEY =
+    "trnsl.1.1.20180423T104000Z.92de8d60387621be.caaca061cc50ab7a5e1ed325c018e437dc26eef6";
 
 var httpOptions = {
     method: "GET"
-}
+};
 
 function convertDataToJSON(response) {
     return response.json();
@@ -19,9 +20,12 @@ function displayData(data) {
     var translations = data.text;
     if (translations) {
         var htmlMarkup = translations.reduce(function(html, translation) {
-            return html + `<h3>Translating "${translateText.value}" to Urdu</h3>
+            return (
+                html +
+                `<h3>Translating "${translateText.value}" to Urdu</h3>
                           <p><strong>Translation: </strong>${translation}</p>
                           <hr>`
+            );
         }, "");
         translateResults.innerHTML = htmlMarkup;
         form.reset();

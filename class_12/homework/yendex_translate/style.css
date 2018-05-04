@@ -1,0 +1,80 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: beige;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-family: inherit;
+    padding-bottom: 15px;
+    position: relative;
+}
+
+form {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+p {
+    text-transform: capitalize;
+}
+
+hr {
+    padding: 0px;
+}
+
+input[type="text"] {
+    font-size: 1em;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+input[type="submit"] {
+    -webkit-appearance: none;
+    font-size: 1em;
+    min-height: 30px;
+}
+
+.error-message {
+    width: 100%;
+    background-color: pink;
+    padding: 10px;
+    font-size: 1em;
+}
+
+#record-btn {
+    background: url(mic-icon.svg) no-repeat;
+    background-position: center;
+    background-size: 20px;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+#record-btn:hover {
+    background-size: 21px;
+    height: 31px;
+    width: 31px;
+}
+
+#record-btn:active {
+    background-size: 25px;
+    height: 35px;
+    width: 35px;
+}
